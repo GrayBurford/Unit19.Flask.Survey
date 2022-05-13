@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block pagetitle %} Survey Start {% endblock %}
+
+{% block title %} 
+    {{survey.title}} 
+{% endblock %}
+
+{% block instructions %} 
+    {{survey.instructions}} 
+{% endblock %}
+
+
+{% block main %}    
+<form action="/start" method="POST">You are about to start our Questionnaire! 
+    <button>Start Survey!</button>
+</form>  
+{% endblock %}
+
+
+<!-- {% block content %}
+<h1>Madlibs</h1>
+
+<form action="/story">
+    {% for prompt in prompts %}
+      <p>{{ prompt }}:
+        <input name="{{ prompt }}" placeholder="{{prompt}}'s placeholder">
+      </p>
+    {% endfor %}
+    <button>Submit Story Info!</button>
+  </form>
+
+<h3>Show template here:</h3>
+<p>{{template}}</p>
+{% endblock %} -->

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block pagetitle %}{% endblock %}</title>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="http://www.reddit.com/">R3ddit</a>
+        <a href="http://images.google.com">Google Images</a>
+        <a href="http://www.youtube.com">YT</a>
+        <a href="http://www.wunderground.com">Weather</a>
+    </nav>
+
+    {% for msg in get_flashed_messages() %}
+    <h1>{{msg}}</h1>
+    {% endfor %}
+
+    <h1>{% block title %}{% endblock %}</h1>
+    <h3>{% block instructions %}{% endblock %}</h3>
+
+    <section>
+        {% block main %}{% endblock %}
+    </section>
+
+
+    <footer>Copywrite by Gray Burford</footer>
+</body>
+</html>

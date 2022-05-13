@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block pagetitle %} Done! {% endblock %}
+
+{% block title %}
+    You are now done with survey:
+    {{survey.title}} 
+{% endblock %}
+
+{% block instructions %}
+    ...with instuctions:
+    {{survey.instructions}} 
+{% endblock %}
+
+
+{% block main %}    
+<h2>Thank you for taking the time to waste your time here!</h2>
+{% endblock %}

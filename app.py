@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, jsonify, render_template, flash
+from flask import Flask, request, redirect, jsonify, render_template, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 from surveys import satisfaction_survey
 
@@ -8,41 +8,61 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 debug = DebugToolbarExtension(app)
 
-responses = []
-
 @app.route('/')
 def show_home_page():
+    """Start our survey"""
+
     return render_template('home.html', survey=satisfaction_survey)
+
 
 @app.route('/start', methods=["POST"])
 def start_survey():
+    """Clear session's responses, and redirect to first question"""
+
+    session['responses'] = []
     return redirect('/questions/0')
+
 
 @app.route('/questions/<int:num>')
 def show_questions(num):
-    if len(responses) == len(satisfaction_survey.questions):
+    """Display survey questions"""
+    all_user_responses = session['responses']
+
+    if len(all_user_responses) == len(satisfaction_survey.questions):
+        """If user answered last question, redirect to thanks page"""
         return redirect('/thanks')
-    if len(responses) != num:
+
+    if len(all_user_responses) != num:
+        """If user tries to access question other than succeeding one, flash and redirect"""
         flash("Hey! Don't touch that!")
-        return redirect(f"/questions/{len(responses)}")
+        return redirect(f"/questions/{len(all_user_responses)}")
+
     return render_template('questions.html', survey=satisfaction_survey, num=num)
+
 
 @app.route('/answer', methods=["POST"])
 def handle_answer():
+    """Retrieve user answer and append to session list"""
     choice = request.form['answer']
-    responses.append(choice)
+
+    all_user_responses = session['responses']
+    all_user_responses.append(choice)
+    session['responses'] = all_user_responses # why do we need to rebind this????
 
     print(request.form) #i.e. ImmutableMultiDict([('answer', 'Yes')])
     print(request.args) #i.e. ImmutableMultiDict([])
-    print(responses) #i.e. ['Yes']
+    print(all_user_responses) #i.e. ['Yes']
 
-    if len(responses) == len(satisfaction_survey.questions):
+    if len(all_user_responses) == len(satisfaction_survey.questions):
+        """If user answers all questions, redirect to thanks page."""
         return redirect('/thanks')
     else:
-        return redirect(f"/questions/{len(responses)}")
+        return redirect(f"/questions/{len(all_user_responses)}")
+
 
 @app.route('/thanks')
 def thank_you():
+    """All questions answer. Redirect to thanks page"""
     return render_template('thanks.html', survey=satisfaction_survey)
 
 
